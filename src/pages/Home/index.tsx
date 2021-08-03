@@ -26,14 +26,14 @@ const Home = (): JSX.Element => {
   const { addProduct, cart } = useCart();
 
   const cartItemsAmount = cart.reduce((sumAmount, product) => {
-    sumAmount[product.id] += 1;
+    sumAmount[product.id] = product.amount;
 
     return sumAmount;
   }, {} as CartItemsAmount);
 
   useEffect(() => {
     async function loadProducts() {
-      api.get('products')
+      api.get('/products')
         .then(response => {
           setProducts(
             response.data.map((product: Product) => ({
@@ -52,8 +52,8 @@ const Home = (): JSX.Element => {
 
   return (
     <ProductList>
-      {products.map(product => {
-        <li>
+      {products.map(product => (
+        <li key={product.id}>
           <img src={product.image} alt={product.title} />
           <strong>{product.title}</strong>
           <span>{product.priceFormatted}</span>
@@ -70,7 +70,7 @@ const Home = (): JSX.Element => {
             <span>ADICIONAR AO CARRINHO</span>
           </button>
         </li>
-      })}
+      ))}
     </ProductList>
   );
 };
